@@ -1,10 +1,13 @@
+
 import React, { useState } from 'react';
 import ExerciseList from './components/ExerciseList';
 import DaySelector from './components/DaySelector';
 import Timer from './components/Timer';
+import Login from './Login';
 import './index.css';
 
 const App = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [selectedDay, setSelectedDay] = useState('Monday');
   const [exercises, setExercises] = useState({
     Monday: [
@@ -62,6 +65,10 @@ const App = () => {
     ]
   });
 
+  const handleLogin = () => {
+    setIsAuthenticated(true);
+  };
+
   const handleDayChange = (event) => {
     setSelectedDay(event.target.value);
   };
@@ -82,14 +89,20 @@ const App = () => {
 
   return (
     <div>
-      <h1>Treinos</h1>
-      <DaySelector selectedDay={selectedDay} onDayChange={handleDayChange} />
-      <ExerciseList
-        exercises={exercises[selectedDay]}
-        onCheckboxChange={handleCheckboxChange}
-        onLearnMoreClick={handleLearnMoreClick}
-      />
-      <Timer />
+      {!isAuthenticated ? (
+        <Login onLogin={handleLogin} />
+      ) : (
+        <>
+          <h1>App de treino</h1>
+          <DaySelector selectedDay={selectedDay} onDayChange={handleDayChange} />
+          <ExerciseList
+            exercises={exercises[selectedDay]}
+            onCheckboxChange={handleCheckboxChange}
+            onLearnMoreClick={handleLearnMoreClick}
+          />
+          <Timer />
+        </>
+      )}
     </div>
   );
 };
